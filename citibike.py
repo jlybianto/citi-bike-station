@@ -1,7 +1,15 @@
+# ----------------
+# IMPORT PACKAGES
+# ----------------
+
 # Requests is a package that allows download of data from any online resource.
 # The json_normalize package is to convert data into a pandas DataFrame from a JSON format.
 import requests
 from pandas.io.json import json_normalize
+
+# ----------------
+# OBTAIN DATA
+# ----------------
 
 # Pass the URL to point Python to this location.
 r = requests.get("http://www.citibikenyc.com/stations/json")
@@ -13,3 +21,6 @@ r = requests.get("http://www.citibikenyc.com/stations/json")
 
 # Import JSON format station data into a DataFrame (not the whole JSON)
 df = json_normalize(r.json()["stationBeanList"])
+
+# ----------------
+# ----------------
