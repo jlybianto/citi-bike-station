@@ -64,7 +64,7 @@ with con:
 
 	# SQL statement to be executed for the row data entry.
 	sql = ("INSERT INTO citibike_reference (id, totalDocks, city, "
-		"altitude, stAddres2, longitude, postalCode, testStation, "
+		"altitude, stAddress2, longitude, postalCode, testStation, "
 		"stAddress1, stationName, landMark, latitude, location) "
 		"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 
@@ -106,7 +106,7 @@ exec_time = parse(r.json()["executionTime"])
 
 # Entry for execution times
 with con:
-	cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("%s"),))
+	cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("%Y-%m-%d-%H-%M-%S"),))
 
 id_bikes = collections.defaultdict(int)
 
@@ -115,4 +115,4 @@ for station in r.json()["stationBeanList"]:
 
 with con:
 	for k, v in id_bikes.iteritems():
-		cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) " WHERE execution_time = " + exec_time.strftime("%s") + ";")
+		cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime("%Y-%m-%d-%H-%M-%S") + ";")
