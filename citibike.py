@@ -38,6 +38,7 @@ with con:
 	cur.execute("DROP TABLE IF EXISTS available_bikes")
 
 # Create the table specifying the name of columns and their data types.
+# Information that remains static with the station ID (id) number as key value.
 with con:
 	cur.execute("CREATE TABLE citibike_reference ("
 		"id INT PRIMARY KEY, "
@@ -53,7 +54,32 @@ with con:
 		"landMark TEXT, "
 		"latitude NUMERIC, "
 		"location TEXT "
-		)")"
+		")")
+
+	# SQL statement to be executed for the row data entry.
+	sql = ("INSERT INTO citibike_reference (id, totalDocks, city, "
+		"altitude, stAddres2, longitude, postalCode, testStation, "
+		"stAddress1, stationName, landMark, latitude, location) "
+		"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+
+	# For loop to populate values into the database.
+	for station in r.json()["stationBeanList"]:
+		data = (
+			station["id"],
+			station["totalDocks"],
+			station["city"],
+			station["altitude"],
+			station["stAddress2"],
+			station["longitude"],
+			station["postalCode"],
+			station["testStation"],
+			station["stAddress1"],
+			station["stationName"],
+			station["landMark"],
+			station["latitude"],
+			station["location"]
+			)
+		cur.execute(sql, data)
 
 	rows = cur.fetchall()
 
