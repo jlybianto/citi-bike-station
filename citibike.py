@@ -5,9 +5,15 @@
 # Requests is a package that allows download of data from any online resource.
 # The json_normalize package is to convert data into a pandas DataFrame from a JSON format.
 # The sqlite3 model is used to work with the SQLite database.
+# The time package has datetime objects.
+# Dateutil is a package for parsing strings into a Python datetime object.
+# The collections module implements specialized container data types.
 import requests
 from pandas.io.json import json_normalize
 import sqlite3 as lite
+import time
+from dateutil.parser import parse
+import collections
 
 # ----------------
 # OBTAIN DATA
