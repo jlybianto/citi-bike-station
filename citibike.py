@@ -39,21 +39,21 @@ with con:
 
 # Create the table specifying the name of columns and their data types.
 with con:
-	cur.execute("CREATE TABLE citibike_reference (
-		id INT PRIMARY KEY,
-		totalDocks INT,
-		city TEXT,
-		altitude INT,
-		stAddress2 TEXT,
-		longitude NUMERIC,
-		postalCode TEXT,
-		testStation TEXT,
-		stAddress1 TEXT,
-		stationName TEXT,
-		landMark TEXT,
-		latitude NUMERIC,
-		location TEXT
-		)")
+	cur.execute("CREATE TABLE citibike_reference ("
+		"id INT PRIMARY KEY, "
+		"totalDocks INT, "
+		"city TEXT, "
+		"altitude INT, "
+		"stAddress2 TEXT, "
+		"longitude NUMERIC, "
+		"postalCode TEXT, "
+		"testStation TEXT, "
+		"stAddress1 TEXT, "
+		"stationName TEXT, "
+		"landMark TEXT, "
+		"latitude NUMERIC, "
+		"location TEXT "
+		)")"
 
 	rows = cur.fetchall()
 
