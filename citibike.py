@@ -81,7 +81,13 @@ with con:
 			)
 		cur.execute(sql, data)
 
-	rows = cur.fetchall()
+# To get multiple readings per period, the table needs to be different.
+# Extract the ID column from DataFrame to be used in a list.
+station_ids = df["id"].tolist()
 
-	for row in rows:
-		print(row)
+# Add Underscore "_" to the station name and data type for SQLite
+station_ids = ["_" + str(x) + " INT" for x in station_ids]
+
+# Create the table by concatenating the string and joining station IDs.
+with con:
+	cur.execute("CREATE TABLE available_bikes (execution_time INT, " + ", ".join(station_ids) + ");")
