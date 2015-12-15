@@ -54,3 +54,8 @@ with con:
 		latitude NUMERIC,
 		location TEXT
 		)")
+
+	rows = cur.fetchall()
+
+	for row in rows:
+		print(row)
