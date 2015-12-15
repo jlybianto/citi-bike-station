@@ -32,6 +32,11 @@ df = json_normalize(r.json()["stationBeanList"])
 con = lite.connect("citi_bike.db")
 cur = con.cursor()
 
+# Drop currently existing tables.
+with con:
+	cur.execute("DROP TABLE IF EXISTS citibike_reference")
+	cur.execute("DROP TABLE IF EXISTS available_bikes")
+
 # Create the table specifying the name of columns and their data types.
 with con:
 	cur.execute("CREATE TABLE citibike_reference (
