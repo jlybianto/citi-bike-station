@@ -4,8 +4,10 @@
 
 # Requests is a package that allows download of data from any online resource.
 # The json_normalize package is to convert data into a pandas DataFrame from a JSON format.
+# The sqlite3 model is used to work with the SQLite database.
 import requests
 from pandas.io.json import json_normalize
+import sqlite3 as lite
 
 # ----------------
 # OBTAIN DATA
@@ -23,4 +25,27 @@ r = requests.get("http://www.citibikenyc.com/stations/json")
 df = json_normalize(r.json()["stationBeanList"])
 
 # ----------------
+# STORE DATA (STATIC)
 # ----------------
+
+# Connect to the database. The "connect()" method returns a connection object.
+con = lite.connect("citi_bike.db")
+cur = con.cursor()
+
+# Create the table specifying the name of columns and their data types.
+with con:
+	cur.execute("CREATE TABLE citibike_reference (
+		id INT PRIMARY KEY,
+		totalDocks INT,
+		city TEXT,
+		altitude INT,
+		stAddress2 TEXT,
+		longitude NUMERIC,
+		postalCode TEXT,
+		testStation TEXT,
+		stAddress1 TEXT,
+		stationName TEXT,
+		landMark TEXT,
+		latitude NUMERIC,
+		location TEXT
+		)")
