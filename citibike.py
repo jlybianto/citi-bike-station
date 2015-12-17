@@ -103,23 +103,17 @@ with con:
 # ----------------
 
 # For loop to collect one hour worth of data once every minute.
-for t in range(60):
+exec_time = parse(r.json()["executionTime"])
 
-	exec_time = parse(r.json()["executionTime"])
+# Entry for execution times
+with con:
+	cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("%Y-%m-%d-%H-%M-%S"),))
 
-	# Entry for execution times
-	with con:
-		cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("%Y-%m-%d-%H-%M-%S"),))
+id_bikes = collections.defaultdict(int)
 
-	id_bikes = collections.defaultdict(int)
+for station in r.json()["stationBeanList"]:
+	id_bikes[station["id"]] = station["availableBikes"]
 
-	for station in r.json()["stationBeanList"]:
-		id_bikes[station["id"]] = station["availableBikes"]
-
-	with con:
-		for k, v in id_bikes.iteritems():
-			cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime("%Y-%m-%d-%H-%M-%S") + ";")
-
-	# Set timer for sixty seconds before another retrieval of data.
-	time.sleep(60)
-	r = requests.get("http://www.citibikenyc.com/stations/json")
+with con:
+	for k, v in id_bikes.iteritems():
+		cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime("%Y-%m-%d-%H-%M-%S") + ";")
