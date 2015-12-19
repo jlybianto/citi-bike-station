@@ -109,7 +109,7 @@ for t in range(60):
 
 	# Entry for execution times
 	with con:
-		cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("%Y-%m-%d-%H-%M-%S"),))
+		cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("'%Y-%m-%d %H:%M:%S'"),))
 
 	id_bikes = collections.defaultdict(int)
 
@@ -118,7 +118,7 @@ for t in range(60):
 
 	with con:
 		for k, v in id_bikes.iteritems():
-			cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime("%Y-%m-%d-%H-%M-%S") + ";")
+			cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + (exec_time.strftime("'%Y-%m-%d %H:%M:%S'")) + ";")
 
 	# Insert number of seconds the code should sleep.
 	time.sleep(60)
