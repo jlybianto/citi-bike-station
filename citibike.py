@@ -107,16 +107,12 @@ exec_time = parse(r.json()["executionTime"])
 
 # Entry for execution times
 with con:
-	cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("'%Y/%m/%d %H:%M:%S'"),))
+	cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("%Y/%m/%d %H:%M:%S"),))
 
 id_bikes = collections.defaultdict(int)
 
 for station in r.json()["stationBeanList"]:
 	id_bikes[station["id"]] = station["availableBikes"]
-
-# Seems to be have a problem in updating the values for each station ID.
-# UPDATE available_bikes SET _72 = 10 or SET _72 = '10' works in updating but does not work if the WHERE condition is applied.
-# Need to fix.
 
 with con:
 	for k, v in id_bikes.iteritems():
