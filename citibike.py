@@ -102,26 +102,22 @@ with con:
 # STORE DATA (DYNAMIC)
 # ----------------
 
-# For loop to collect one hour worth of data once every minute.
-for t in range(60):
-	r = requests.get("http://www.citibikenyc.com/stations/json")
-	exec_time = parse(r.json()["executionTime"])
+r = requests.get("http://www.citibikenyc.com/stations/json")
+exec_time = parse(r.json()["executionTime"])
 
-	# Entry for execution times
-	with con:
-		cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("'%Y-%m-%d %H:%M:%S'"),))
+# Entry for execution times
+with con:
+	cur.execute("INSERT INTO available_bikes (execution_time) VALUES (?)", (exec_time.strftime("'%Y/%m/%d %H:%M:%S'"),))
 
-	id_bikes = collections.defaultdict(int)
+id_bikes = collections.defaultdict(int)
 
-	for station in r.json()["stationBeanList"]:
-		id_bikes[station["id"]] = station["availableBikes"]
+for station in r.json()["stationBeanList"]:
+	id_bikes[station["id"]] = station["availableBikes"]
 
-	with con:
-		for k, v in id_bikes.iteritems():
-			cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + (exec_time.strftime("'%Y-%m-%d %H:%M:%S'")) + ";")
+# Seems to be have a problem in updating the values for each station ID.
+# UPDATE available_bikes SET _72 = 10 or SET _72 = '10' works in updating but does not work if the WHERE condition is applied.
+# Need to fix.
 
-	# Insert number of seconds the code should sleep.
-	time.sleep(60)
-
-# Close the database connection when done.
-con.close()
+with con:
+	for k, v in id_bikes.iteritems():
+		cur.execute("UPDATE available_bikes SET _" + str(k) + " = " + str(v) + " WHERE execution_time = " + exec_time.strftime("'%Y/%m/%d %H:%M:%S'") + ";")
